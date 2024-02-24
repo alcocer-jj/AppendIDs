@@ -1,18 +1,12 @@
-######################################################################################
-# Script: Append_IDs Package Set-up
-# Project: Append_IDs
-# Authors: 
-#
-# Script Authors: Jose Alcocer, Stephen Schick, and Gabriel Solis
-# Created: Feburary 24, 2024
-# Last updated: Feburary 24, 2024
-#####################################################################################
-
-setwd("/Users/stephenschick/Documents/GitHub/appendIDs/R/")
-
-library("devtools")
-use_r("AppendIDs_FunctionsSum_SS_20240224")
-
+#' Name
+#'
+#' Description
+#' @param df The dataframe to merge
+#' @param breaks what does breaks do here?
+#' @return type what the function returns 
+#' @examples
+#' # we write a code example of how this would work here
+#' @export
 cy_append_ids <- function(df, breaks=T) {
   
   #Load in the country IDs file
@@ -176,13 +170,17 @@ cy_append_ids <- function(df, breaks=T) {
   return(df)
 }
 
-#############################################
-# Function to Add a New Country Name/Spelling
-#############################################
 
-# This function requires two inputs -- the new country name and the existing one
-# e.g. add_name("IR of Afghanistan", "Afghanistan")
 
+#' Adding A New Country Name or Update Spelling
+#'
+#' Description
+#' @param newName Character string of the new name to insert
+#' @param existingName Character string of the name to replace
+#' @return type what the function returns 
+#' @examples
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
 add_name <- function(newName, existingName){
   load("sysdata.rda")
   
@@ -218,10 +216,17 @@ add_name <- function(newName, existingName){
   rm(ids)
 }
 
-###############################
-# Function to Append Suffixes
-###############################
 
+
+#' Appending Suffixes
+#'
+#' Description
+#' @param df 
+#' @param suffix 
+#' @return type what the function returns 
+#' @examples
+#' 
+#' @export
 cy_append_suffix <- function(df,suffix) {
   ids.names = c("country","year","gwno","ccode","ifscode","ifs","gwabbrev")
   for (i in 1:length(names(df))) {
@@ -233,15 +238,17 @@ cy_append_suffix <- function(df,suffix) {
 }
 
 
-############################################
-############################################
-##    More efficient append_ids function for bilateral data      
-##    Miriam Barnum
-##    Updated 4/30/2019
-############################################
-############################################
 
-dyad_append_ids <- function(df, path, breaks=T) {
+#' More Efficient Function for Bilateral Data
+#'
+#' Description
+#' @param df C
+#' @param breaks C
+#' @return type what the function returns 
+#' @examples
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
+dyad_append_ids <- function(df, breaks=T) {
   
   #Load in the country IDs file
   load("sysdata.rda")
@@ -443,53 +450,17 @@ dyad_append_ids <- function(df, path, breaks=T) {
   return(df)
 }
 
-#############################################
-# Function to Add a New Country Name/Spelling
-#############################################
 
-# This function requires two inputs -- the new country name and the existing one
-# e.g. add_name("IR of Afghanistan", "Afghanistan")
 
-add_name <- function(newName, existingName, path = ids_path){
-  load("sysdata.rda")
-  #load("/Volumes/GoogleDrive/My Drive/Master IPE Data/raw-data v5/MasterGWNO.RDATA")
-  
-  if (!is.character(newName) | !is.character(existingName)) {
-    stop("Names must be provided as character strings.")
-  }
-  
-  # preprocess names
-  new <- tolower(newName)
-  new <- gsub('[[:punct:]]', '', new)
-  new <- gsub('\\s', '', new) 
-  
-  ex <- tolower(existingName)
-  ex <- gsub('[[:punct:]]', '', ex)
-  ex <- gsub('\\s', '', ex) 
-  
-  if (new %in% ids$country) {
-    warning(paste(newName,"already exists in the MasterGWNO.RDATA file."))
-  }
-  
-  if (!ex %in% ids$country) {
-    stop(paste(existingName,"does not exist in the IDs file. Please provide a version of the country name that currently exists in the MasterGWNO.RDATA file."))
-  }
-  
-  # duplicate old record, add new name
-  tmp <- ids[ids$country == ex,]
-  tmp$country <- new
-  ids <- rbind(ids, tmp)
-  
-  save(ids,file = "sysdata.rda")
-  #save(ids,file="/Volumes/GoogleDrive/My Drive/Master IPE Data/MasterGWNO.RDATA")
-  
-  rm(ids)
-}
-
-###############################
-# Function to Append Suffixes
-###############################
-
+#' Appending Dyactic Suffixes
+#'
+#' Description
+#' @param df C
+#' @param suffix C
+#' @return type what the function returns 
+#' @examples
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
 dyad_append_suffix <- function(df,suffix) {
   ids.names = c("repcountry","parcountry","year","repgwno","repccode","repifscode","repifs","repgwabbrev",
                 "pargwno","parccode","parifscode","parifs","pargwabbrev")
@@ -501,10 +472,18 @@ dyad_append_suffix <- function(df,suffix) {
   return(df)
 }
 
-###############################
-# Wrapper Functions
-###############################
 
+
+#' Wrapper Function One
+#'
+#' Description
+#' @param df C
+#' @param dyad C
+#' @param breaks C
+#' @return type what the function returns 
+#' @examples
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
 append_ids <- function(df, dyad = FALSE, breaks = TRUE){
   if(dyad){
     print("Adding ID variables to dyadic data...")
@@ -517,6 +496,18 @@ append_ids <- function(df, dyad = FALSE, breaks = TRUE){
   }
 }
 
+
+
+#' Wrapper Function Two
+#'
+#' Description
+#' @param df C
+#' @param suffix C
+#' @param dyad C
+#' @return type what the function returns 
+#' @examples
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
 append_suffix <- function(df, suffix, dyad = FALSE){
   if(dyad){
     print("Adding variable suffixes to dyadic data...")
@@ -528,5 +519,3 @@ append_suffix <- function(df, suffix, dyad = FALSE){
     return(dat)
   }
 }
-
-
