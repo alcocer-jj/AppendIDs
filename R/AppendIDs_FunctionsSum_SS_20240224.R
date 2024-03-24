@@ -1,9 +1,16 @@
-#' Name
+#' @title Append Monadic Country-Year Identifiers
+#' @description Standardizes a dataframe with monadic country-year observations by creating a "country" column based on Gleditsch-Ward (GW) country-year observations.
+#' A master dataframe of Gleditch-Ward country-year observations is used to standardize country-year identifiers across observations, allowing for merging of datasets from sources using different country name coding schemes.
+#' In addition to GW country names and country codes (gwno), adds additional columns with other potential country-year identifiers including Correlates of War (COW) and International Finanical Statistics (IFS) codes.
+#' Supplied dataframe must include columns designating each observation's country identifier and the year of observation.
+#' Dataframe must include single observations for each country-year without duplicated observations.
 #'
-#' Description
-#' @param df A dataframe object with monadic country data which includes a column designating country IDs for each observation and a column designating years for each observation.
-#' @param breaks If true, ID joining process will be paused at instances where GWNO codes cannot be identified for a given country-year observation. Returns a vector of missing GWNO codes.
-#' @return A dataframe object with monadic country data, updated to standardize current country names based on Gleditsch-Ward number and year observations (Gleditsch and War 1999). Includes the following country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation (ifs).
+#' @param df A dataframe object with monadic country data which includes a column designating country names or identifiers for each observation and a column designating years for each observation.
+#' Supplied country identifiers can be provided as a column containing country names, or Gleditch-Ward or Correlates of War abbreviations or identifiers. Function is not case-sensitive for country column names, as long as column name includes "country".
+#' @param breaks TRUE or FALSE, if TRUE ID joining process will be interrupted at instances where GWNO codes cannot be identified for a given country-year observation. Returns a vector of missing GWNO codes.
+#' @return A dataframe object with monadic country data, updated to standardize current country names based on Gleditsch-Ward number and year observations (Gleditsch and War 1999).
+#' Country names will be returned as the column "country" and years as "year", Previous identifiers returned as "countryname_raw".
+#' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
 #' # we write a code example of how this would work here
 #' @export
@@ -168,54 +175,6 @@ cy_append_ids <- function(df, breaks=T) {
   return(df)
 }
 
-
-
-#' Adding A New Country Name or Update Spelling
-#'
-#' Description
-#' @param newName Character string of the new name to insert
-#' @param existingName Character string of the name to replace
-#' @return type what the function returns
-#' @examples
-#' add_name("IR of Afghanistan", "Afghanistan")
-#' @export
-add_name <- function(newName, existingName){
-  load("sysdata.rda")
-
-  if (!is.character(newName) | !is.character(existingName)) {
-    stop("Names must be provided as character strings.")
-  }
-
-  # preprocess names
-  new <- tolower(newName)
-  new <- gsub('[[:punct:]]', '', new)
-  new <- gsub('\\s', '', new)
-
-  ex <- tolower(existingName)
-  ex <- gsub('[[:punct:]]', '', ex)
-  ex <- gsub('\\s', '', ex)
-
-  if (new %in% ids$country) {
-    warning(paste(newName,"already exists in the MasterGWNO.RDATA file."))
-  }
-
-  if (!ex %in% ids$country) {
-    stop(paste(existingName,"does not exist in the IDs file. Please provide a version of the country name that currently exists in the MasterGWNO.RDATA file."))
-  }
-
-  # duplicate old record, add new name
-  tmp <- ids[ids$country == ex,]
-  tmp$country <- new
-  ids <- rbind(ids, tmp)
-
-  save(ids,file = paste(path,"MasterGWNO.RDATA", sep =''))
-  #save(ids,file="/Volumes/GoogleDrive/My Drive/Master IPE Data/MasterGWNO.RDATA")
-
-  rm(ids)
-}
-
-
-
 #' Appending Suffixes
 #'
 #' Description
@@ -237,14 +196,23 @@ cy_append_suffix <- function(df,suffix) {
 
 
 
-#' More Efficient Function for Bilateral Data
+#' @title Append Dyadic Country-Year Identifiers
+#' @description Standardizes a dataframe with dyadic country-year observations by creating "repcountry" and "parcountry" columns based on Gleditsch-Ward (GW) country-year observations.
+#' A master dataframe of Gleditch-Ward country-year observations is used to standardize country-year identifiers across observations, allowing for merging of datasets from sources using different country name coding schemes.
+#' In addition to GW country names and country codes (gwno), adds additional columns with other potential country-year identifiers including Correlates of War (COW) and International Finanical Statistics (IFS) codes.
+#' Supplied dataframe must include columns designating observations for each dyad member's country identifier and the year of observation.
+#' Dataframe must include single observations for each repcountry-parcountry-year without duplicated observations.
 #'
-#' Description
-#' @param df C
-#' @param breaks C
-#' @return type what the function returns
+#' @param df A dataframe object with dyadic country data which includes columns designating country names or identifiers for each country in the dyad and a column designating years for each observation.
+#' Supplied country identifiers can be provided as a column containing country names, or Gleditch-Ward or Correlates of War abbreviations or identifiers.
+#' Dyadic country identifiers can be differentiated numerically ("Country1" and "Country2") or alphabetically ("CountryA" and "CountryB").
+#' Function is not case-sensitive for country column names, as long as column name includes "country".
+#' @param breaks TRUE or FALSE, if TRUE ID joining process will be interrupted at instances where GWNO codes cannot be identified for a given country-year observation. Returns a vector of missing GWNO codes.
+#' @return A dataframe object with dyadic country data, updated to standardize current country names based on Gleditsch-Ward number and year observations (Gleditsch and War 1999).
+#' Country names will be returned as the columns "repcountry" and "parcountry" and years as "year", Previous identifiers returned as "repcountryname_raw" and "parcountryname_raw".
+#' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
-#' add_name("IR of Afghanistan", "Afghanistan")
+#' # we write a code example of how this would work here
 #' @export
 dyad_append_ids <- function(df, breaks=T) {
 
@@ -269,6 +237,10 @@ dyad_append_ids <- function(df, breaks=T) {
         names(df)[i]=="Countryname1" | names(df)[i]=="Country 1" |
         names(df)[i]=="country 1" | names(df)[i]=="CountryName 1" |
         names(df)[i]=="countryname 1" | names(df)[i]=="Countryname 1"|
+        names(df)[i]=="countryname A" | names(df)[i]=="Countryname A"|
+        names(df)[i]=="countryA" | names(df)[i]=="CountryA"|
+        names(df)[i]=="countrynameA" | names(df)[i]=="CountrynameA"|
+        names(df)[i]=="countryNameA" | names(df)[i]=="CountryNameA"|
         names(df)[i]=="repcountry") {
       names(df)[i]="repcountry"
       df$repcountry = as.character(df$repcountry)
@@ -281,6 +253,10 @@ dyad_append_ids <- function(df, breaks=T) {
         names(df)[i]=="Countryname2" | names(df)[i]=="Country 2" |
         names(df)[i]=="country 2" | names(df)[i]=="CountryName 2" |
         names(df)[i]=="countryname 2" | names(df)[i]=="Countryname 2" |
+        names(df)[i]=="countryname B" | names(df)[i]=="Countryname B"|
+        names(df)[i]=="countryB" | names(df)[i]=="CountryB"|
+        names(df)[i]=="countrynameB" | names(df)[i]=="CountrynameB"|
+        names(df)[i]=="countryNameB" | names(df)[i]=="CountryNameB"|
         names(df)[i]=="parcountry") {
       names(df)[i]="parcountry"
       df$parcountry = as.character(df$parcountry)
@@ -449,14 +425,37 @@ dyad_append_ids <- function(df, breaks=T) {
 }
 
 
-
-#' Appending Dyactic Suffixes
+#' @title Append Suffixes (Monadic Country-Year)
+#' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
+#' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
+#' For example, "COW" could be appended as a suffix to variables from the Correlates of War dataset.
 #'
-#' Description
-#' @param df C
-#' @param suffix C
-#' @return type what the function returns
-#' @examples
+#' @param df A monadic country-year dataframe.
+#' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
+#' @return A monadic country-year dataframe with variable column names modified with the provided suffix.
+#'
+#' add_name("IR of Afghanistan", "Afghanistan")
+#' @export
+cy_append_suffix <- function(df,suffix) {
+  ids.names = c("country","year","gwno","ccode","ifscode","ifs","gwabbrev")
+  for (i in 1:length(names(df))) {
+    if ((names(df)[i] %in% ids.names)==F) {
+      names(df)[i] = paste(names(df)[i],suffix,sep="_")
+    }
+  }
+  return(df)
+}
+
+
+#' @title Append Suffixes (Dyadic Country-Year)
+#' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
+#' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
+#' For example, "COW" could be appended as a suffix to variables from the Correlates of War dataset.
+#'
+#' @param df A dyadic country-year dataframe.
+#' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
+#' @return A dyadic country-year dataframe with variable column names modified with the provided suffix.
+#'
 #' add_name("IR of Afghanistan", "Afghanistan")
 #' @export
 dyad_append_suffix <- function(df,suffix) {
@@ -472,15 +471,29 @@ dyad_append_suffix <- function(df,suffix) {
 
 
 
-#' Wrapper Function One
+#' @title Append Country-Year Identifiers
+#' @description Standardizes a dataframe with country-year observations by creating new country identifer columns based on Gleditsch-Ward (GW) country-year observations.
+#' A master dataframe of Gleditch-Ward country-year observations is used to standardize country-year identifiers across observations, allowing for merging of datasets from sources using different country name coding schemes.
+#' In addition to GW country names and country codes (gwno), adds additional columns with other potential country-year identifiers including Correlates of War (COW) and International Finanical Statistics (IFS) codes.
+#' Supplied dataframe must include columns designating observations' country identifier and the year of observation.
+#' For dyadic data the dataframe should include columns with country identifiers for each country in the dyad.
+#' Dataframe must include single observations for each country-year observation or repcountry-parcountry-year without duplicated observations.
 #'
-#' Description
-#' @param df C
-#' @param dyad C
-#' @param breaks C
-#' @return type what the function returns
+#' @param df A dataframe object with country data which includes columns designating country names or identifiers for each country and a column designating years for each observation.
+#' Supplied dataframe can contain either monadic country data, with a column for country identifiers and year, or dyadic country data, with columns for each paired country and year.
+#' Supplied country identifiers can be provided as a column containing country names, or Gleditch-Ward or Correlates of War abbreviations or identifiers.
+#' Dyadic country identifiers can be differentiated numerically ("Country1" and "Country2") or alphabetically ("CountryA" and "CountryB").
+#' Function is not case-sensitive for country column names, as long as column name includes "country".
+#'
+#' @param breaks TRUE or FALSE, if TRUE ID joining process will be interrupted at instances where GWNO codes cannot be identified for a given country-year observation. Returns a vector of missing GWNO codes.
+#'
+#' @return A dataframe object with either monadic or dyadic country-year data based on the prior dataframe, updated to standardize current country names based on Gleditsch-Ward number and year observations (Gleditsch and War 1999).
+#' Country names will be returned as the column "country" in monadic data, or as "repcountry" and "parcountry" in dyadic data, and years as "year".
+#' Previous identifiers are returned as "countryname_raw" in monadic data and as "repcountryname_raw" and "parcountryname_raw" in dyadic data.
+#' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
-#' add_name("IR of Afghanistan", "Afghanistan")
+
+#'
 #' @export
 append_ids <- function(df, dyad = FALSE, breaks = TRUE){
   if(dyad){
@@ -496,16 +509,18 @@ append_ids <- function(df, dyad = FALSE, breaks = TRUE){
 
 
 
-#' Wrapper Function Two
+#' @title Append Suffixes
+#' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
+#' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
+#' For example, "COW" could be appended as a suffix to variables from the Correlates of War dataset.
 #'
-#' Description
-#' @param df C
-#' @param suffix C
-#' @param dyad C
-#' @return type what the function returns
-#' @examples
+#' @param df A country-year dataframe with either monadic or dyadic country-year observations.
+#' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
+#' @return A monadic or dyadic country-year dataframe with variable column names modified with the provided suffix.
+#'
 #' add_name("IR of Afghanistan", "Afghanistan")
 #' @export
+
 append_suffix <- function(df, suffix, dyad = FALSE){
   if(dyad){
     print("Adding variable suffixes to dyadic data...")
