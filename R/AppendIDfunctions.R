@@ -12,12 +12,15 @@
 #' Country names will be returned as the column "country" and years as "year", Previous identifiers returned as "countryname_raw".
 #' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
-#' # we write a code example of how this would work here
+#' data_cy <- cy_append_ids(data, breaks=T)
 #' @export
 cy_append_ids <- function(df, breaks=T) {
 
   #Load in the country IDs file
-  load("sysdata.rda")
+  install.packages('readr')
+  library(readr)
+  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.csv"
+  ids <-read_csv(url(urlfile), show_col_types = F)
 
   # prevents false positives for "notfound"
   ids$minyear2 <- ifelse(ids$minyear2 == -9999, 9999, ids$minyear2)
@@ -175,26 +178,6 @@ cy_append_ids <- function(df, breaks=T) {
   return(df)
 }
 
-#' Appending Suffixes
-#'
-#' Description
-#' @param df
-#' @param suffix
-#' @return type what the function returns
-#' @examples
-#'
-#' @export
-cy_append_suffix <- function(df,suffix) {
-  ids.names = c("country","year","gwno","ccode","ifscode","ifs","gwabbrev")
-  for (i in 1:length(names(df))) {
-    if ((names(df)[i] %in% ids.names)==F) {
-      names(df)[i] = paste(names(df)[i],suffix,sep="_")
-    }
-  }
-  return(df)
-}
-
-
 
 #' @title Append Dyadic Country-Year Identifiers
 #' @description Standardizes a dataframe with dyadic country-year observations by creating "repcountry" and "parcountry" columns based on Gleditsch-Ward (GW) country-year observations.
@@ -212,12 +195,15 @@ cy_append_suffix <- function(df,suffix) {
 #' Country names will be returned as the columns "repcountry" and "parcountry" and years as "year", Previous identifiers returned as "repcountryname_raw" and "parcountryname_raw".
 #' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
-#' # we write a code example of how this would work here
+#' data_dyad <- dyad_append_ids(data, breaks = F)
 #' @export
 dyad_append_ids <- function(df, breaks=T) {
 
   #Load in the country IDs file
-  load("sysdata.rda")
+  install.packages('readr')
+  library(readr)
+  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.csv"
+  ids <-read_csv(url(urlfile), show_col_types = F)
 
   # prevents false positives for "notfound"
   ids$minyear2 <- ifelse(ids$minyear2 == -9999, 9999, ids$minyear2)
@@ -429,12 +415,11 @@ dyad_append_ids <- function(df, breaks=T) {
 #' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
 #' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
 #' For example, "COW" could be appended as a suffix to variables from the Correlates of War dataset.
-#'
 #' @param df A monadic country-year dataframe.
 #' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
 #' @return A monadic country-year dataframe with variable column names modified with the provided suffix.
-#'
-#' add_name("IR of Afghanistan", "Afghanistan")
+#' @examples
+#' cy_append_suffix("IR of Afghanistan", "Afghanistan")
 #' @export
 cy_append_suffix <- function(df,suffix) {
   ids.names = c("country","year","gwno","ccode","ifscode","ifs","gwabbrev")
@@ -451,12 +436,11 @@ cy_append_suffix <- function(df,suffix) {
 #' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
 #' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
 #' For example, "COW" could be appended as a suffix to variables from the Correlates of War dataset.
-#'
 #' @param df A dyadic country-year dataframe.
 #' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
 #' @return A dyadic country-year dataframe with variable column names modified with the provided suffix.
-#'
-#' add_name("IR of Afghanistan", "Afghanistan")
+#' @examples
+#' dyad_append_suffix("IR of Afghanistan", "Afghanistan")
 #' @export
 dyad_append_suffix <- function(df,suffix) {
   ids.names = c("repcountry","parcountry","year","repgwno","repccode","repifscode","repifs","repgwabbrev",
@@ -468,8 +452,6 @@ dyad_append_suffix <- function(df,suffix) {
   }
   return(df)
 }
-
-
 
 #' @title Append Country-Year Identifiers
 #' @description Standardizes a dataframe with country-year observations by creating new country identifer columns based on Gleditsch-Ward (GW) country-year observations.
@@ -492,8 +474,7 @@ dyad_append_suffix <- function(df,suffix) {
 #' Previous identifiers are returned as "countryname_raw" in monadic data and as "repcountryname_raw" and "parcountryname_raw" in dyadic data.
 #' Dataframe will also include the following additional country-year identifiers: Gleditsch-Ward Number [gwno], Gleditsch-Ward Abbreviation [gwabbrev], Correlates of War Country Code [ccode], International Finanical Statistics (IFS) number [ifscode], and IFS abbreviation [ifs].
 #' @examples
-
-#'
+#' new_data <- append_ids(data, breaks = F)
 #' @export
 append_ids <- function(df, dyad = FALSE, breaks = TRUE){
   if(dyad){
@@ -508,7 +489,6 @@ append_ids <- function(df, dyad = FALSE, breaks = TRUE){
 }
 
 
-
 #' @title Append Suffixes
 #' @description Appends a designated character string ("suffix") to all variables in a given dataframe except for identifying column variables. Identifying column variables include country names, identifiers, and abbreviations, and year.
 #' This function is designed to allow researchers to append suffixes to differentiate between variables in a combined dataset based on their dataset of origin.
@@ -517,10 +497,9 @@ append_ids <- function(df, dyad = FALSE, breaks = TRUE){
 #' @param df A country-year dataframe with either monadic or dyadic country-year observations.
 #' @param suffix A character string to append as an suffix to all non-identifying variable columns, such as "COW" for Correlates of War.
 #' @return A monadic or dyadic country-year dataframe with variable column names modified with the provided suffix.
-#'
-#' add_name("IR of Afghanistan", "Afghanistan")
+#' @examples
+#' data_suffix <- append_suffix(data, " ")
 #' @export
-
 append_suffix <- function(df, suffix, dyad = FALSE){
   if(dyad){
     print("Adding variable suffixes to dyadic data...")
