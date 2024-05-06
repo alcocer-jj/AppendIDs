@@ -1,11 +1,13 @@
 Package: AppendIDs
 Type: Package
-Title: What the Package Does (Title Case) (ADD A TITLE TO THIS, STEPHEN)
+Title: 'AppendIDs' Package
 Version: 0.1.0
 Authors: Tucker, Jacob R., Miriam Barnum, Jose Alcocer, Therese Anders, Stephen Schick, Gabriel Solis, and Benjamin A.T. Graham.
 Maintainer: Jose Alcocer <alcocer@usc.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description. (ADD A CONCISE DESCRIPTION HERE, STEPHEN)
+Description:    The AppendIDs package provides researchers using cross-sectional and cross-sectional time-series (CSTS) country data with tools to standardize and merge datasets from sources using differing country-coding schemes. Researchers in international relations and comparative politics confront merging problems when combining datasets which rely on differing country-coding methods, such as Gleditch-Ward numbers, Correlates of War (COW) country codes, and International Financial Statistics (IFS) codes. Variations in naming and coding conventions across datasets, particularly for countries which may be coded under different names in the same year, can result in duplicated or missing observations which can affect empirical analyses.
+    The package's core function, append_ids, can be used to apply standardized Gleditsch-Ward country names and identifiers to datasets with country-year and dyadic country-year observations. These new identifiers, along with their corresponding values in the Correlates of War coding conventions, are appended to the provided dataset automatically. The function also informs the user of duplicated country-year observations. The AppendIDs function can be used along with the countrycode package to label and merge datasets without uniform coding schemes, or to merge datasets from differing coding conventions. We rely on Gleditch-Ward naming conventions to provide a standardized coding criteria for country-year and dyadic country-year observations, enabling researchers to easily merge datasets from different sources using alternative coding conventions such as COW and IFS codes. Gleditch-Ward (Gleditsch and Ward 1999) conventions are selected as their coding criteria provide temporal continuity over country name changes, such as between observations of the "German Federal Republic" prior to 1990 and "Germany" in the post-1990 period.
+    The AppendIDs package is used to maintain the International Political Economy (IPE) Data Resource (Graham and Tucker 2016), which provides researchers in international relations and comparative politics with a unified dataset of important political and economic variables from 97 of the most commonly used datasets in the IPE literature.
+
 License: CC0
 Encoding: UTF-8
 LazyData: true
