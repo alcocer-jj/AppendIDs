@@ -126,7 +126,6 @@ cy_append_ids <- function(df, breaks=T) {
 
   if(breaks) {
     print("**Check missing GWNO values, then type 'c' when done**")
-    browser()
   }
 
   ###############################
@@ -365,7 +364,6 @@ dyad_append_ids <- function(df, breaks=T) {
 
   if(breaks) {
     print("**Check missing GWNO values, then type 'c' when done**")
-    browser()
   }
 
   ###############################
