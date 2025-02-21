@@ -17,9 +17,8 @@
 cy_append_ids <- function(df, breaks=T) {
 
   #Load in the country IDs file
-  require(readr)
-  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.csv"
-  ids <-read_csv(url(urlfile), show_col_types = F)
+  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.rds"
+  ids <- readRDS(url(urlfile))
 
   # prevents false positives for "notfound"
   ids$minyear2 <- ifelse(ids$minyear2 == -9999, 9999, ids$minyear2)
@@ -48,7 +47,6 @@ cy_append_ids <- function(df, breaks=T) {
       names(df)[i] = "year"
       yrexists = 1
     }
-
     #Check to see if a gwno code already exists
     if (names(df)[i] == "GWNo" | names(df)[i]=="gwno" |
         names(df)[i]=="GWNO") {
@@ -199,10 +197,8 @@ cy_append_ids <- function(df, breaks=T) {
 dyad_append_ids <- function(df, breaks=T) {
 
   #Load in the country IDs file
-  install.packages('readr')
-  library(readr)
-  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.csv"
-  ids <-read_csv(url(urlfile), show_col_types = F)
+  urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.rds"
+  ids <- readRDS(url(urlfile))
 
   # prevents false positives for "notfound"
   ids$minyear2 <- ifelse(ids$minyear2 == -9999, 9999, ids$minyear2)
