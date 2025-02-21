@@ -17,8 +17,7 @@
 cy_append_ids <- function(df, breaks=T) {
 
   #Load in the country IDs file
-  install.packages('readr')
-  library(readr)
+  require(readr)
   urlfile <- "https://raw.githubusercontent.com/alcocer-jj/Rdata/main/sysdata.csv"
   ids <-read_csv(url(urlfile), show_col_types = F)
 
