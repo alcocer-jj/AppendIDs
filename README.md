@@ -125,7 +125,7 @@ dyad_append_suffix("IR of Afghanistan", "Afghanistan")
 
 ## Author Contributions: 
 
-Jacob R. Tucker built the initial version of the `AppendIDs` function. Miriam Barnum made significant improvements to the structure and performance of this function, including enabling it to be more efficiently updated and extending it to work more smoothly with dyad-year data. Therese Anders also contributed  revisions to the code at a variety of junctures. Jose J. Alcocer, Stephen Schick, and Gabriel Solis completed the work to enable the `AppendIDs` function to be released as a publicly available R package. Benjamin A.T. Graham initiated the creation of the `AppendIDs` function and guided its development throughout. Jose J. Alcocer (alcocer@usc.edu) is the corresponding author for this package. 
+Jacob R. Tucker built the initial version of the `AppendIDs` function. Miriam Barnum made significant improvements to the structure and performance of this function, including enabling it to be more efficiently updated and extending it to work more smoothly with dyad-year data. Therese Anders also contributed  revisions to the code at a variety of junctures. Jose J. Alcocer, Stephen Schick, and Gabriel Solis completed the work to enable the `AppendIDs` function to be released as a publicly available R package. Benjamin A.T. Graham initiated the creation of the `AppendIDs` function and guided its development throughout. Jose J. Alcocer (alcocerj29@gmail.com) is the corresponding author for this package. 
 
 
 ## Acknowledgements
